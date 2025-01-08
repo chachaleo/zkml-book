@@ -1,9 +1,0 @@
-[book]
-authors = ["Charlotte"]
-language = "en"
-multilingual = false
-src = "src"
-title = "ZKML Book"
-
-[output.html]
-mathjax-support = true
