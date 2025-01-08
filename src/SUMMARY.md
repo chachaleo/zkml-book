@@ -1,4 +1,4 @@
- [🚧Introduction](./ch01-00-introduction.md)
+ [Introduction](./ch01-00-introduction.md)
 
 ---
 # ZK
