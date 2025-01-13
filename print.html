@@ -263,6 +263,17 @@ communications to convince  \(V\) the correctness of the summation.</p>
 <div align="center">
     <img src="./img/ch05-layer-eq.png" alt="drawing" width="350">
 </div>
+<h1 id="in-practice--example-with-linear-layers"><a class="header" href="#in-practice--example-with-linear-layers">In practice : example with Linear Layers</a></h1>
+<p>In a Linear Layer, the only computation involved is the sum of products between weights
+and data. Therefor the GKR protocol will be applied on circuit, representing the linear layer with <em>mul</em> gates. The equation of  \(V_i\) becomes :</p>
+<div align="center">
+    <img src="./img/ch05-eq.png" alt="drawing" width="450">
+</div>
+<p>To be able to execute the Sumcheck protocol necessary for GKR protocol on this equation, it's factorized as a product of two factors on which two successive product Sumcheck protocols can be applied.</p>
+<div align="center">
+    <img src="./img/ch05-facto.png" alt="drawing" width="450">
+</div>
+<p>The protocol will consists of two parts, the first will perform a sumcheck protocol on Eq 1) to fix the variable a, with variable b summed on the boolean hypercude. And then once the variable a is fiexed, a Sumcheck on Eq 2) on the variable b.</p>
 
                     </main>
 
