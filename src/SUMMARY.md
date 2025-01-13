@@ -10,4 +10,4 @@
 
 ---
 # ZKML
-- [🚧SpaZK](./ch05-00-SpaZK.md)
+- [SpaZK](./ch05-00-SpaZK.md)
