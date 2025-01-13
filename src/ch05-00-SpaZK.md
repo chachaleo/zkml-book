@@ -15,7 +15,7 @@ In this context, the GKR protocol is applied to a circuit that represents the co
 
 ### Circuit representation 
 
-To leverage the GKR protocol, we formalize the neural network model as a circuit. The circuit can be represented as follow : 
+To leverage the GKR protocol, the neural network model is modelled as a circuit. The circuit can be represented as follow : 
 
 * The output layer of the neural network is labeled as layer 0, while the input layer is labeled as layer d.
 
@@ -29,7 +29,7 @@ To leverage the GKR protocol, we formalize the neural network model as a circuit
 </div>
 
 
-### Mathematical represenation
+### Mathematical representation
 The gates of the circuit, represented by the nodes in the diagram, are sparsity-aware gates and are defined by :
 
 <div align="center">
@@ -37,7 +37,7 @@ The gates of the circuit, represented by the nodes in the diagram, are sparsity-
 </div>
 
 
-From this we have that each layer \\(i\\), with \\(S_i\\) gates and \\(s_i = log\(S_i\)\\), can be represented as a function \\(V_i : \{0, 1\}^{s_i} → F\\) which evaluates the output of the layer from a binary input that corresponds to the index of the gate of the previous layer feeding into the current layer in its binary representation. This function is represented by :
+From this, each layer \\(i\\), with \\(S_i\\) gates and \\(s_i = log\(S_i\)\\), can be represented as a function \\(V_i : \{0, 1\}^{s_i} → F\\) which evaluates the output of the layer from a binary input that corresponds to the index of the gate of the previous layer feeding into the current layer in its binary representation. This function is represented by :
 
 <div align="center">
     <img src="./img/ch05-layer-eq.png" alt="drawing" width="350">
@@ -49,7 +49,7 @@ From this we have that each layer \\(i\\), with \\(S_i\\) gates and \\(s_i = log
 
 
 In a Linear Layer, the only computation involved is the sum of products between weights
-and data. Therefor the GKR protocol will be applied on circuit, representing the linear layer with *mul* gates. The equation of  \\(V_i\\) becomes :
+and data. Therefore the GKR protocol will be applied on circuit, representing the linear layer with *mul* gates. The equation of  \\(V_i\\) becomes :
 
 <div align="center">
     <img src="./img/ch05-eq.png" alt="drawing" width="450">
@@ -64,6 +64,6 @@ To be able to execute the Sumcheck protocol necessary for GKR protocol on this e
     <img src="./img/ch05-facto.png" alt="drawing" width="450">
 </div>
 
-The protocol will consists of two parts, the first will perform a sumcheck protocol on Eq 1) to fix the variable a, with variable b summed on the boolean hypercude. And then once the variable a is fiexed, a Sumcheck on Eq 2) on the variable b.
+The protocol will consists of two parts, the first will be a sumcheck protocol on Eq. (1) to fix the variable a, with variable b summed on the boolean hypercude. And then once the variable a is fixed, a Sumcheck on Eq. (2) on the variable b.
 
 
