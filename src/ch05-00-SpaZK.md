@@ -44,6 +44,26 @@ From this we have that each layer \\(i\\), with \\(S_i\\) gates and \\(s_i = log
 </div>
 
 
+# In practice : example with Linear Layers
 
+
+
+In a Linear Layer, the only computation involved is the sum of products between weights
+and data. Therefor the GKR protocol will be applied on circuit, representing the linear layer with *mul* gates. The equation of  \\(V_i\\) becomes :
+
+<div align="center">
+    <img src="./img/ch05-eq.png" alt="drawing" width="450">
+</div>
+
+
+To be able to execute the Sumcheck protocol necessary for GKR protocol on this equation, it's factorized as a product of two factors on which two successive product Sumcheck protocols can be applied.
+
+
+
+<div align="center">
+    <img src="./img/ch05-facto.png" alt="drawing" width="450">
+</div>
+
+The protocol will consists of two parts, the first will perform a sumcheck protocol on Eq 1) to fix the variable a, with variable b summed on the boolean hypercude. And then once the variable a is fiexed, a Sumcheck on Eq 2) on the variable b.
 
 
