@@ -7,6 +7,7 @@
 ---
 # ML
 - [Normalization](./ch04-00-normalization.md)
+- [Ternary Weight Networks](./ch06-00-twn.md)
 
 ---
 # ZKML

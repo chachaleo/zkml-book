@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>SpaZK - ZKML Book</title>
+        <title>Ternary Weight Networks - ZKML Book</title>
 
 
         <!-- Custom HTML head -->
@@ -154,57 +154,54 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="spazk"><a class="header" href="#spazk">SpaZK</a></h1>
-<p>In machine learning (ML), techniques like pruning and quantization often lead to sparsity in large models, a property extensively utilized to enhance the efficiency of model inference.</p>
-<p>However, this concept of sparsity has yet to be fully explored in the domain of ZKML.</p>
-<p><a href="https://eprint.iacr.org/2024/1018.pdf"><em>SpaZK</em></a> was the first ZKML protocol introduced to address this gap. A ZKML framework based on the GKR protocol exploiting sparsity to improve proof generation efficiency.</p>
-<h2 id="gkr-protocol"><a class="header" href="#gkr-protocol">GKR Protocol</a></h2>
-<p>At its core, SpaZK employs the GKR protocol, an interactive proof system designed for circuit evaluation.</p>
-<p>In this context, the GKR protocol is applied to a circuit that represents the computation of a neural network using add and mul gates.</p>
-<h3 id="circuit-representation"><a class="header" href="#circuit-representation">Circuit representation</a></h3>
-<p>To leverage the GKR protocol, the neural network model is modelled as a circuit. The circuit can be represented as follow :</p>
+                        <h1 id="ternary-weight-networks"><a class="header" href="#ternary-weight-networks">Ternary Weight Networks</a></h1>
+<p>Ternary Weight Networks (TWNs) were introduced in this <a href="https://arxiv.org/pdf/1605.04711">paper</a> as a memory and computation efficient
+networks representation.</p>
+<p>The goal of TWNs is to find the ternary weight, weight in {-1, 0, 1}, that minimizes the difference with the initial float weight, the distance is chosen to be defines as the eucleadian distance with a nonnegative scaling factor. For Ternary weights \( W \) and ternarized weight \( W̃ \) the function is :</p>
+<div align="center">
+    <img src="./img/ch06-eq.png" alt="drawing" width="400">
+</div>
+<p>The problem of solving this equation is simplified into the problem of findind the delta that will map float weight to the values -1, 0 and 1 as :</p>
+<div align="center">
+    <img src="./img/ch06-delta.png" alt="drawing" width="270">
+</div>
+<p>Finally the problem of finding such delta is simplified, depending on the assumption whether \( W \) follows a Uniform or a Normal distribution :</p>
 <ul>
 <li>
-<p>The output layer of the neural network is labeled as layer 0, while the input layer is labeled as layer d.</p>
+<p>Uniform distribution : \(\Delta^* \approx \frac{2}{3} \frac{1}{n} \sum_{i=1}^{n} |W_i|\)</p>
 </li>
 <li>
-<p>For each \(\ i \in {0, d} \), the outputs of layer i + 1 serve as inputs to layer i. This reverse ordering arises because the Sumcheck protocol in the GKR framework begins with a claim about the output layer (layer 0) and iteratively reduces the claim to preceding layers, ultimately arriving at a final, easily verifiable claim about the input layer (layer d).</p>
+<p>Normal distribution : \(\Delta^* \approx \frac{3}{4} \frac{1}{n} \sum_{i=1}^{n} |W_i|\)</p>
 </li>
 </ul>
+<h2 id="training"><a class="header" href="#training">Training</a></h2>
+<p>The training is done as follow :</p>
+<ul>
+<li>In the forward pass, the ternarization operation is applied on the weight, the float32 weight are cached for future
+parameter update.</li>
+<li>In the backward pass, ternary weight gradient is calculated to update the float32 weight.</li>
+</ul>
+<p>Here is the complete algorithm of the training process :</p>
 <div align="center">
-    <img src="./img/ch05-GKR.png" alt="drawing" width="800">
-    <br>
-    <i>This image represents the circuit where each layer feeds into the next, along with an overview of the GKR protocol, which begins with a claim about the output layer and, after *d* iterations, reduces to a claim about the input layer.</i>
+    <img src="./img/ch06-training.png" alt="drawing" width="800">
 </div>
-<h3 id="mathematical-representation"><a class="header" href="#mathematical-representation">Mathematical representation</a></h3>
-<p>The gates of the circuit, represented by the nodes in the diagram, are sparsity-aware gates and are defined by :</p>
+<h2 id="inference"><a class="header" href="#inference">Inference</a></h2>
+<p>Once the training is performed, the inference is straightforward. The forward pass with ternary weight becomes :</p>
 <div align="center">
-    <img src="./img/ch05-gates.png" alt="drawing" width="350">
+    <img src="./img/ch06-forward.png" alt="drawing" width="340">
 </div>
-<p>From this, each layer \(i\), with \(S_i\) gates and \(s_i = log(S_i)\), can be represented as a function \(V_i : {0, 1}^{s_i} → F\) which evaluates the output of the layer from a binary input that corresponds to the index of the gate of the previous layer feeding into the current layer in its binary representation. This function is represented by :</p>
-<div align="center">
-    <img src="./img/ch05-layer-eq.png" alt="drawing" width="350">
-</div>
-<h1 id="in-practice--example-with-linear-layers"><a class="header" href="#in-practice--example-with-linear-layers">In practice : example with Linear Layers</a></h1>
-<p>In a Linear Layer, the only computation involved is the sum of products between weights
-and data. Therefore the GKR protocol will be applied on circuit, representing the linear layer with <em>mul</em> gates. The equation of  \(V_i\) becomes :</p>
-<div align="center">
-    <img src="./img/ch05-eq.png" alt="drawing" width="450">
-</div>
-<p>To be able to execute the Sumcheck protocol necessary for GKR protocol on this equation, it's factorized as a product of two factors on which two successive product Sumcheck protocols can be applied.</p>
-<div align="center">
-    <img src="./img/ch05-facto.png" alt="drawing" width="450">
-</div>
-<p>The protocol will consists of two parts, the first will be a sumcheck protocol on Eq. (1) to fix the variable a, with variable b summed on the boolean hypercude. And then once the variable a is fixed, a Sumcheck on Eq. (2) on the variable b.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="ch06-00-twn.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="ch04-00-normalization.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
+                            <a rel="next prefetch" href="ch05-00-SpaZK.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -212,10 +209,13 @@ and data. Therefore the GKR protocol will be applied on circuit, representing th
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="ch06-00-twn.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="ch04-00-normalization.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
+                    <a rel="next prefetch" href="ch05-00-SpaZK.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
             </nav>
 
         </div>

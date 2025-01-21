@@ -232,6 +232,42 @@ communications to convince  \(V\) the correctness of the summation.</p>
 <p>\[
 ā_i = \frac{a_i}{\sqrt{\frac{1}{n} \sum_{i=1}^n a_i^2}} g_i
 \]</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ternary-weight-networks"><a class="header" href="#ternary-weight-networks">Ternary Weight Networks</a></h1>
+<p>Ternary Weight Networks (TWNs) were introduced in this <a href="https://arxiv.org/pdf/1605.04711">paper</a> as a memory and computation efficient
+networks representation.</p>
+<p>The goal of TWNs is to find the ternary weight, weight in {-1, 0, 1}, that minimizes the difference with the initial float weight, the distance is chosen to be defines as the eucleadian distance with a nonnegative scaling factor. For Ternary weights \( W \) and ternarized weight \( W̃ \) the function is :</p>
+<div align="center">
+    <img src="./img/ch06-eq.png" alt="drawing" width="400">
+</div>
+<p>The problem of solving this equation is simplified into the problem of findind the delta that will map float weight to the values -1, 0 and 1 as :</p>
+<div align="center">
+    <img src="./img/ch06-delta.png" alt="drawing" width="270">
+</div>
+<p>Finally the problem of finding such delta is simplified, depending on the assumption whether \( W \) follows a Uniform or a Normal distribution :</p>
+<ul>
+<li>
+<p>Uniform distribution : \(\Delta^* \approx \frac{2}{3} \frac{1}{n} \sum_{i=1}^{n} |W_i|\)</p>
+</li>
+<li>
+<p>Normal distribution : \(\Delta^* \approx \frac{3}{4} \frac{1}{n} \sum_{i=1}^{n} |W_i|\)</p>
+</li>
+</ul>
+<h2 id="training"><a class="header" href="#training">Training</a></h2>
+<p>The training is done as follow :</p>
+<ul>
+<li>In the forward pass, the ternarization operation is applied on the weight, the float32 weight are cached for future
+parameter update.</li>
+<li>In the backward pass, ternary weight gradient is calculated to update the float32 weight.</li>
+</ul>
+<p>Here is the complete algorithm of the training process :</p>
+<div align="center">
+    <img src="./img/ch06-training.png" alt="drawing" width="800">
+</div>
+<h2 id="inference"><a class="header" href="#inference">Inference</a></h2>
+<p>Once the training is performed, the inference is straightforward. The forward pass with ternary weight becomes :</p>
+<div align="center">
+    <img src="./img/ch06-forward.png" alt="drawing" width="340">
+</div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="spazk"><a class="header" href="#spazk">SpaZK</a></h1>
 <p>In machine learning (ML), techniques like pruning and quantization often lead to sparsity in large models, a property extensively utilized to enhance the efficiency of model inference.</p>
 <p>However, this concept of sparsity has yet to be fully explored in the domain of ZKML.</p>
